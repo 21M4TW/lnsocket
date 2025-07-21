@@ -52,7 +52,9 @@ libsodium-1.0.18-stable.tar.gz:
 deps/libsodium/configure: libsodium-1.0.18-stable.tar.gz
 	tar xvf $^; \
 	mkdir -p deps; \
-	mv libsodium-stable deps/libsodium
+	rm -rf deps/libsodium; \
+	mv libsodium-stable deps/libsodium; \
+	touch $@
 
 deps/secp256k1/.git:
 	@tools/refresh-submodules.sh $(SUBMODULES)
@@ -122,7 +124,7 @@ deps/libsodium/config.log: deps/libsodium/configure
 
 deps/secp256k1/.libs/libsecp256k1.a: deps/secp256k1/config.log
 	cd deps/secp256k1; \
-	make -j libsecp256k1.la
+	$(MAKE) -j libsecp256k1.la
 
 libsecp256k1.a: deps/secp256k1/.libs/libsecp256k1.a
 	cp $< $@
@@ -162,7 +164,7 @@ deps/libsodium/libsodium-js/lib/libsodium.a: deps/libsodium/configure
 
 deps/libsodium/src/libsodium/.libs/libsodium.a: deps/libsodium/config.log
 	cd deps/libsodium/src/libsodium; \
-	make -j libsodium.la
+	$(MAKE)	-j libsodium.la
 
 install: $(DEPS)
 	mkdir -p $(PREFIX)/lib $(PREFIX)/include
